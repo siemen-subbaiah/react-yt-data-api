@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import youtube from './youtube';
+const { default: Videos } = require('./components/Videos');
+const { default: Navbar } = require('./components/Navbar');
 
 function App() {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const getVideos = (query) => {
+    setLoading(true);
+    youtube
+      .get('/search', {
+        params: {
+          q: query,
+        },
+      })
+      .then((res) => {
+        setVideos(res.data.items);
+        setLoading(false);
+      });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar getVideos={getVideos} />
+      {loading ? (
+        <h3 className="load">FETCHING RESULTS FROM YOUTUBE API...</h3>
+      ) : (
+        <Videos videos={videos} />
+      )}
     </div>
   );
 }
