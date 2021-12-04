@@ -1,13 +1,19 @@
 import React from 'react';
 import VideoList from './VideoList';
 
-const Videos = ({ videos }) => {
+const Videos = ({ videos, loading }) => {
   return (
-    <div className="videos">
-      {videos.map((video) => (
-        <VideoList video={video} key={video.etag} />
-      ))}
-    </div>
+    <>
+      {loading ? (
+        <h3 className='load'>FETCHING RESULTS FROM YOUTUBE API...</h3>
+      ) : (
+        <div className='videos'>
+          {videos.map((video) => (
+            <VideoList video={video} key={video.etag} />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 
